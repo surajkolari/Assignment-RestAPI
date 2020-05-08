@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>React - Consumer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<style>
+.tab-content>.tab-pane {
+    padding-top: 2%;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+$("#getAllCars").click(function(){
+	var settings = {
+	  "async": true,
+	  "crossDomain": true,
+	  "url": "http://192.168.99.100:8080/rest-service/cars-db/cars",
+	  "method": "GET",
+	  "headers": {
+	    "cache-control": "no-cache",
+	    "postman-token": "ecae7ee2-ad40-882c-1401-adda2894c07b"
+	  }
+	}
+
+	$.ajax(settings).done(function (response) {
+		var obj = jQuery.parseJSON(response);
+		for (var i = 0,len = obj.length; i < len; i++) {
+			$("#getAllCarsResultView").append("<tr><td>"+(i)+"</td><td>"+obj[i].Name+"</td><td>"+obj[i].Origin+"</td><td>"+obj[i].Horsepower+"</td><td>"+obj[i].Year+"</td><td>"+obj[i].Miles_per_Gallon+"</td></tr>")
+    	}
+    	$('#getAllCars').hide()
+	});
+});
+$("#carsByIdForm").submit(function(e){
+	e.preventDefault()
+	var carId = $('input[name="carId"]').val()
+	var settings = {
+	  "async": true,
+	  "crossDomain": true,
+	  "url": "http://192.168.99.100:8080/rest-service/cars-db/car/"+carId,
+	  "method": "GET",
+	  "headers": {
+	    "cache-control": "no-cache",
+	    "postman-token": "ecae7ee2-ad40-882c-1401-adda2894c07b"
+	  }
+	}
+
+	$.ajax(settings).done(function (response) {
+		var obj = jQuery.parseJSON(response);
+		$("#getcarByIdResultView").append("<tr><td>"+carId+"</td><td>"+obj.Name+"</td><td>"+obj.Origin+"</td><td>"+obj.Horsepower+"</td><td>"+obj.Year+"</td><td>"+obj.Miles_per_Gallon+"</td></tr>")
+	});
+});
+});
+</script>
+<body>
+
+<div class="container">
+  <h2>Assignment- Rest API</h2>
+  <p>This page displays data fetched from a Json Database that is running on a Docker container using rest api.</p>
+
+  <ul class="nav nav-tabs nav-justified">
+    <li class="active"><a data-toggle="tab" href="#allCars">All Cars</a></li>
+    <li><a data-toggle="tab" href="#carsById">Cars By ID</a></li>
+    <li><a data-toggle="tab" href="#dataSize">Data Size</a></li>
+  </ul>
+
+  <div class="tab-content nav-justified">
+    <div id="allCars" class="tab-pane fade in active">
+    	<div class="text-center">
+		  	<table class="table table-bordered">
+		    	<thead>
+		      		<tr>
+		        		<th>ID</th>
+		        		<th>Name</th>
+		        		<th>Origin</th>
+		        		<th>Horsepower</th>
+		        		<th>Year</th>
+		        		<th>Miles per Gallon</th>
+		      		</tr>
+		    	</thead>
+		    	<tbody id="getAllCarsResultView">
+				</tbody>
+		    </table>
+    		<button id="getAllCars" class="btn btn-primary">Get Data</button>
+    		<div id="getAllCarsResult">	
+    		</div>
+    	</div>
+    </div>
+    <div id="carsById" class="tab-pane fade">
+    <div class="text-center">
+    	<form id="carsByIdForm" class="form-inline" action="/action_page.php">
+  			<div class="form-group">
+    			<label for="carId">Car ID : </label>
+    			<input type="carId" class="form-control" id="carId" name="carId" required>
+  			</div>
+  			<button type="submit" class="btn btn-primary">Get Data</button>
+  		</form>
+  		<br/>
+  		<table class="table table-bordered">
+		    <thead>
+		      	<tr>
+		      		<th>ID</th>
+		        	<th>Name</th>
+		        	<th>Origin</th>
+		        	<th>Horsepower</th>
+		        	<th>Year</th>
+		        	<th>Miles per Gallon</th>
+		      	</tr>
+		    </thead>
+			<tbody id="getcarByIdResultView">
+			</tbody>
+		</table>
+	</div>
+    </div>
+    <div id="dataSize" class="tab-pane fade">
+      <h3>Number of objects in the Database.</h3>
+      <p>406</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
