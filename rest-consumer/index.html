@@ -15,45 +15,48 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
-$("#getAllCars").click(function(){
+	$("#getAllCars").click(function(){
+		var settings = {
+		  "async": true,
+		  "crossDomain": true,
+		  "url": "http://192.168.99.100:8080/rest-service/cars-db/cars",
+		  "method": "GET",
+		}
+
+		$.ajax(settings).done(function (response) {
+			var obj = jQuery.parseJSON(response);
+			for (var i = 0,len = obj.length; i < len; i++) {
+				$("#getAllCarsResultView").append("<tr><td>"+(i)+"</td><td>"+obj[i].Name+"</td><td>"+obj[i].Origin+"</td><td>"+obj[i].Horsepower+"</td><td>"+obj[i].Year+"</td><td>"+obj[i].Miles_per_Gallon+"</td></tr>")
+	    	}
+	    	$('#getAllCars').hide()
+		});
+	});
+	$("#carsByIdForm").submit(function(e){
+		e.preventDefault()
+		var carId = $('input[name="carId"]').val()
+		var settings = {
+		  "async": true,
+		  "crossDomain": true,
+		  "url": "http://192.168.99.100:8080/rest-service/cars-db/car/"+carId,
+		  "method": "GET",
+		}
+
+		$.ajax(settings).done(function (response) {
+			var obj = jQuery.parseJSON(response);
+			$("#getcarByIdResultView").append("<tr><td>"+carId+"</td><td>"+obj.Name+"</td><td>"+obj.Origin+"</td><td>"+obj.Horsepower+"</td><td>"+obj.Year+"</td><td>"+obj.Miles_per_Gallon+"</td></tr>")
+		});
+	});
 	var settings = {
-	  "async": true,
-	  "crossDomain": true,
-	  "url": "http://192.168.99.100:8080/rest-service/cars-db/cars",
-	  "method": "GET",
-	  "headers": {
-	    "cache-control": "no-cache",
-	    "postman-token": "ecae7ee2-ad40-882c-1401-adda2894c07b"
-	  }
+		"async": true,
+		"crossDomain": true,
+		"url": "http://192.168.99.100:8080/rest-service/cars-db/dataSize",
+		"method": "GET",
 	}
 
 	$.ajax(settings).done(function (response) {
 		var obj = jQuery.parseJSON(response);
-		for (var i = 0,len = obj.length; i < len; i++) {
-			$("#getAllCarsResultView").append("<tr><td>"+(i)+"</td><td>"+obj[i].Name+"</td><td>"+obj[i].Origin+"</td><td>"+obj[i].Horsepower+"</td><td>"+obj[i].Year+"</td><td>"+obj[i].Miles_per_Gallon+"</td></tr>")
-    	}
-    	$('#getAllCars').hide()
+		$('#dataSizeResult').text(obj.Size)
 	});
-});
-$("#carsByIdForm").submit(function(e){
-	e.preventDefault()
-	var carId = $('input[name="carId"]').val()
-	var settings = {
-	  "async": true,
-	  "crossDomain": true,
-	  "url": "http://192.168.99.100:8080/rest-service/cars-db/car/"+carId,
-	  "method": "GET",
-	  "headers": {
-	    "cache-control": "no-cache",
-	    "postman-token": "ecae7ee2-ad40-882c-1401-adda2894c07b"
-	  }
-	}
-
-	$.ajax(settings).done(function (response) {
-		var obj = jQuery.parseJSON(response);
-		$("#getcarByIdResultView").append("<tr><td>"+carId+"</td><td>"+obj.Name+"</td><td>"+obj.Origin+"</td><td>"+obj.Horsepower+"</td><td>"+obj.Year+"</td><td>"+obj.Miles_per_Gallon+"</td></tr>")
-	});
-});
 });
 </script>
 <body>
@@ -117,8 +120,8 @@ $("#carsByIdForm").submit(function(e){
 	</div>
     </div>
     <div id="dataSize" class="tab-pane fade">
-      <h3>Number of objects in the Database.</h3>
-      <p>406</p>
+      <h3>Number of objects in the Database</h3>
+      <p id="dataSizeResult"></p>
     </div>
   </div>
 </div>
